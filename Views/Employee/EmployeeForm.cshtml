@@ -1,0 +1,137 @@
+﻿
+@{
+    ViewBag.Title = "EmployeeForm";
+}
+
+<h2>EmployeeForm</h2>
+<table>
+    <tr>
+        <td>Name: </td>
+        <td><input type="text" id="txtname" /></td>
+    </tr>
+    <tr>
+        <td>Mobile Number: </td>
+        <td><input type="text" id="txtmb" /></td>
+    </tr>
+    <tr>
+        <td>Age: </td>
+        <td><input type="text" id="txtage" /></td>
+    </tr>
+    <tr>
+        <td></td>
+        <td><input type="button" id="btnsave" value="Submit" onclick="VALIDATION()"/></td>
+    </tr>
+
+</table>
+<table id="tbl">
+    <tr>
+        <th>Employee ID</th>
+        <th>Employee Name</th>
+        <th>Employee Mobile Number</th>
+        <th>Employee Age</th>
+    </tr>
+</table>
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    function VALIDATION() {
+        if ($("#txtname").val() != "") {
+            if ($("#txtmb").val() != "") {
+                if ($("#txtage").val() != "") {
+                    SAVE();
+                }
+                else {
+                    alert("Please enter age!");
+                }
+            }
+            else {
+                alert("Please enter mobile!");
+            }
+        }
+        else {
+            alert("Please enter name!");
+        }
+        //var namVal = "";
+        //var mobileVal = "";
+        //var ageVal = "";
+        //namVal = checkname();
+        //mobileVal = checkmobile();
+        //ageVal = checkage();
+        //if (namVal != "" && mobileVal != "" && ageVal != "") {
+        //    SAVE(); 
+        //    //console.log("All fields has not been filled!");
+        //}
+        //else {
+        //    alert("Something went wrong!");
+        //    //console.log("All fields has been filled!");
+        //}
+        
+    }
+    function checkname() {
+        if ($("#textname").val() == "") {
+            return ('please enter your name\n');
+        }
+        else {
+            return "";
+        }
+    }
+        function checkmobile() { 
+            if ($("#textmb").val() == "") {
+                return ('please enter your mobile number\n');
+            }
+            else {
+                return "";
+            }
+        }
+        function checkage() { 
+            if ($("#textage").val() == "") {
+                return ('please enter your age\n');
+            }
+            else {
+                return "";
+            }
+        }
+    
+
+
+
+    $(document).ready(function () {
+        SHOW();
+    });
+    function SHOW() {
+        $.ajax({
+            url: 'Employee/EmployeeDisplay',
+            type: 'post',
+            data: {},
+            success: function (data) {
+                data = JSON.parse(data);
+                $("#tbl").find("tr:gt(0)").remove();
+                for (var i = 0; i < data.length; i++) {
+                    $("#tbl").append('<tr> <td>' + data[i].empid + '</td><td>' + data[i].name + '</td><td>' + data[i].mobile +'</td><td>age</td> </tr>');
+                }
+            },
+            error: function () {
+                alert('data not found ');
+            }
+        });
+    }
+    function SAVE() {
+        $.ajax({
+            url: 'Employee/EmployeeInsert',
+            type: 'post',
+            data: { 
+                A: $("#txtname").val(), 
+                B: $("#txtmb").val(),
+                C: $("#txtage").val()
+            },
+            success: function () {
+                alert('data has been saved');
+                SHOW();
+            },
+            error: function () {
+                alert('data has not been saved');
+            }
+        });
+    }
+</script>
